@@ -1,26 +1,21 @@
-FROM node:24-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+FROM node:24-bookworm-slim
 
-FROM node:24-alpine AS build
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
 
-FROM node:24-alpine AS run
-WORKDIR /app
-ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-RUN addgroup -S next && adduser -S next -G next
-COPY --from=build /app/.next/standalone ./
-COPY --from=build /app/.next/static ./.next/static
-COPY --from=build /app/quini6_historico.csv ./quini6_historico.csv
+
+COPY package.json package-lock.json ./
+RUN npm ci --include=dev --no-audit --no-fund
+
+COPY . .
+RUN npm run build
+
+ENV NODE_ENV=production
+
 COPY docker-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh && mkdir -p /app/data && chown -R next:next /app /app/data
+RUN chmod +x /entrypoint.sh && mkdir -p /app/data && chown -R node:node /app/data
+
 EXPOSE 3000
 ENTRYPOINT ["/entrypoint.sh"]
