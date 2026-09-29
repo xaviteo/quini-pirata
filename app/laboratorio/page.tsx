@@ -17,49 +17,33 @@ export default function LaboratorioPage() {
         Cada receta jugó una boleta por sorteo, armada solo con lo anterior, y se midió contra Tradicional.
         El azar espera {expected.toFixed(2)} aciertos. Un 4 o más en Tradicional o en La Segunda es premio.
       </p>
-      <table className="sheet">
-        <thead>
-          <tr>
-            <th>Receta</th>
-            <th>Sorteos</th>
-            <th>Aciertos promedio</th>
-            <th>Premios de 4+</th>
-            <th>Seis en Tradicional</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id} className={row.id === "casa" ? "is-casa" : undefined}>
-              <td>{row.label}</td>
-              <td>{row.draws}</td>
-              <td>{row.avgHitsTradicional.toFixed(3)}</td>
-              <td>{row.prizesOfFour}</td>
-              <td>{row.sixes}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="year">Peso de la casa para el sorteo {board.upcoming.sorteo}</p>
-      <table className="sheet">
-        <thead>
-          <tr>
-            <th>N°</th>
-            <th>Apariciones</th>
-            <th>Sorteos de atraso</th>
-            <th>Peso</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stats.map((stat) => (
-            <tr key={stat.n} className={board.house.numbers.includes(stat.n) ? "is-casa" : undefined}>
-              <td>{pad(stat.n)}</td>
-              <td>{stat.appearances}</td>
-              <td>{stat.delay}</td>
-              <td>{stat.weight}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="bands">
+        {rows.map((row) => (
+          <article className={row.id === "casa" ? "band is-casa" : "band"} key={row.id}>
+            <h2>{row.label}</h2>
+            <dl className="stats">
+              <div><dt>Sorteos</dt><dd>{row.draws}</dd></div>
+              <div><dt>Aciertos</dt><dd>{row.avgHitsTradicional.toFixed(3)}</dd></div>
+              <div><dt>Premios de 4+</dt><dd>{row.prizesOfFour}</dd></div>
+              <div><dt>Seis</dt><dd>{row.sixes}</dd></div>
+            </dl>
+          </article>
+        ))}
+      </div>
+      <p className="year">Atraso para el sorteo {board.upcoming.sorteo}. Marcados, los de la boleta.</p>
+      <ol className="weight-grid">
+        {stats.map((stat, index) => (
+          <li
+            key={stat.n}
+            data-on={board.house.numbers.includes(stat.n)}
+            style={{ ["--i" as string]: index }}
+            title={`${stat.appearances} apariciones · peso ${stat.weight}`}
+          >
+            <b>{pad(stat.n)}</b>
+            <small>{stat.delay}</small>
+          </li>
+        ))}
+      </ol>
     </main>
   );
 }

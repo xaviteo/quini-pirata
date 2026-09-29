@@ -13,7 +13,9 @@ export default function MesaPage() {
       </p>
       <section className="band">
         <h2>Boleta de la casa</h2>
-        <Numbers numbers={house.numbers} />
+        <div className="boleta">
+          <Numbers numbers={house.numbers} />
+        </div>
       </section>
     </main>
   );

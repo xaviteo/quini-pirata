@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Nav } from "@/components/nav";
 import "./globals.css";
@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   title: "quini.pirata.app",
   description: "Mesa privada del Quini 6. Boleta, histórico y aviso de premios.",
   robots: { index: false, follow: false },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 const themeBoot = `(function(){try{var t=localStorage.getItem('quini-theme');if(t!=='day'&&t!=='night'){var h=new Date().getHours();t=(h>=20||h<7)?'night':'day'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})();`;

@@ -19,11 +19,17 @@ export default function HomePage() {
         </div>
       </section>
       <div className="circle" aria-hidden="true">
+        <svg className="ring" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="46" />
+          <circle cx="50" cy="50" r="40" />
+        </svg>
         <span>{upcoming.sorteo}</span>
       </div>
       <section className="poster-bottom">
         <p className="kicker">Boleta de la casa</p>
-        <Numbers numbers={house.numbers} />
+        <div className="boleta">
+          <Numbers numbers={house.numbers} />
+        </div>
         <p className="fine">
           Semilla {upcoming.sorteo}. Suma {house.sum}, entre {house.sumLo} y {house.sumHi}. {house.odds} impares y {house.lows} bajos.
           Los números son {house.numbers.map(pad).join(" ")}. La chance de estos seis es la misma que la de cualquier otra boleta: 1 en 9.366.819.

@@ -21,8 +21,8 @@ export default async function JugadasPage({ searchParams }: { searchParams: Prom
       <form className="form" method="post" action="/api/jugadas">
         <input type="hidden" name="action" value="create" />
         <div className="row-6">
-          {["n0", "n1", "n2", "n3", "n4", "n5"].map((name) => (
-            <input key={name} name={name} inputMode="numeric" maxLength={2} required aria-label={name} />
+          {["n0", "n1", "n2", "n3", "n4", "n5"].map((name, index) => (
+            <input key={name} name={name} inputMode="numeric" maxLength={2} required aria-label={`Número ${index + 1}`} />
           ))}
         </div>
         <div className="choices">

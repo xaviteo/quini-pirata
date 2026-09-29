@@ -13,7 +13,7 @@ export default async function HistoricoPage({ searchParams }: { searchParams: Pr
     <main className="page">
       <p className="kicker">{draws.length} sorteos en archivo</p>
       <h1>{anio}</h1>
-      <div className="pills">
+      <div className="pills scroll">
         {years.map((year) => (
           <Link className="pill" key={year} href={`/historico?anio=${year}`} data-active={year === anio}>
             {year}

@@ -32,7 +32,7 @@ export function Numbers({ numbers, className = "nums" }: { numbers: number[]; cl
   return (
     <ol className={className}>
       {shown.map((n, index) => (
-        <li key={index}>{pad(n)}</li>
+        <li key={index} style={{ ["--i" as string]: index }}>{pad(n)}</li>
       ))}
     </ol>
   );
@@ -41,8 +41,8 @@ export function Numbers({ numbers, className = "nums" }: { numbers: number[]; cl
 export function StaticNumbers({ numbers, dense = false }: { numbers: number[]; dense?: boolean }) {
   return (
     <ol className={dense ? "nums dense" : "nums"}>
-      {numbers.map((n) => (
-        <li key={n}>{pad(n)}</li>
+      {numbers.map((n, index) => (
+        <li key={n} style={{ ["--i" as string]: index }}>{pad(n)}</li>
       ))}
     </ol>
   );
