@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Schibsted_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import { Nav } from "@/components/nav";
 import "./globals.css";
 
-const grotesk = Schibsted_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "700", "900"],
+const grotesk = localFont({
+  src: "../fonts/SchibstedGrotesk.ttf",
+  weight: "500 900",
   variable: "--font",
   display: "swap",
 });
