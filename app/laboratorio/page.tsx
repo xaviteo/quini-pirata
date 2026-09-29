@@ -1,6 +1,8 @@
 import { loadBacktest, loadBoard, loadNumberStats } from "@/src/data/draws";
 import { pad } from "@/src/domain/house";
 
+export const dynamic = "force-dynamic";
+
 export default function LaboratorioPage() {
   const board = loadBoard();
   const rows = loadBacktest();
