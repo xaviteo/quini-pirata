@@ -1,21 +1,15 @@
 FROM node:22-bookworm-slim
 
 WORKDIR /app
-
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-COPY package.json package-lock.json ./
-RUN npm ci --include=dev --no-audit --no-fund
-
-COPY . .
-ENV NODE_OPTIONS=--max-old-space-size=1536
-RUN npm run build
-ENV NODE_ENV=production
+COPY release/app.tgz /tmp/app.tgz
+RUN tar -xzf /tmp/app.tgz -C /app && rm /tmp/app.tgz && mkdir -p /app/data && chown -R node:node /app
 
 COPY docker-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh && mkdir -p /app/data && chown -R node:node /app/data
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 3000
 ENTRYPOINT ["/entrypoint.sh"]

@@ -3,5 +3,6 @@
 *.jpg binary
 *.webp binary
 *.ttf binary
+*.tgz binary
 *.woff binary
 *.woff2 binary
