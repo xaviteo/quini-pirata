@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { originFrom } from "@/src/auth/http";
 import { getSession } from "@/src/auth/session";
 import { ensureAdmin, findUserById } from "@/src/db";
 
@@ -10,9 +11,7 @@ export default async function CuentaPage({ searchParams }: { searchParams: Promi
   const user = findUserById(session.uid);
   if (!user) redirect("/login");
   const params = await searchParams;
-  const host = (await headers()).get("x-forwarded-host") ?? (await headers()).get("host");
-  const proto = (await headers()).get("x-forwarded-proto") ?? "http";
-  const inviteLink = params.invite && host ? `${proto}://${host}/invitacion/${params.invite}` : null;
+  const inviteLink = params.invite ? `${originFrom(await headers())}/invitacion/${params.invite}` : null;
 
   return (
     <main className="page">
