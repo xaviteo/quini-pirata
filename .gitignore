@@ -1,0 +1,10 @@
+node_modules
+.next
+.env
+.env.local
+*.log
+tsconfig.tsbuildinfo
+public/gap.csv
+data/
+quini6_historico.json
+quini6_historico_long.csv
