@@ -1,27 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Cambiar } from "@/components/cambiar";
 import { StaticNumbers } from "@/components/numbers";
-import { PozoTesoro } from "@/components/pozo-tesoro";
 import { premiosDe } from "@/src/data/premios";
 import { getSession } from "@/src/auth/session";
 import { listTickets } from "@/src/db";
 import { cronica } from "@/src/domain/cronica";
 import { formatFecha, pad } from "@/src/domain/house";
+import { formatPesos } from "@/src/domain/premios";
 import { pozoExtra } from "@/src/domain/prizes";
 import { revisar } from "@/src/domain/revisar";
-import { formatPesos, tesoro } from "@/src/domain/tesoro";
 import type { Draw } from "@/src/domain/types";
 
-export async function Resultado({
-  draws,
-  sorteo,
-  cambiarFrase,
-}: {
-  draws: Draw[];
-  sorteo: number;
-  cambiarFrase?: string;
-}) {
+export async function Resultado({ draws, sorteo }: { draws: Draw[]; sorteo: number }) {
   const index = draws.findIndex((draw) => draw.sorteo === sorteo);
   const draw = draws[index];
   if (!draw) notFound();
@@ -30,13 +20,11 @@ export async function Resultado({
   const premios = premiosDe(draw.sorteo);
   const extra = pozoExtra(draw);
   const lines = cronica(draw, premios);
-  const tradicional = premios?.tradicional ?? null;
-  const tesoroTradicional = tesoro(tradicional?.monto ?? null, tradicional?.ganadores ?? 0, draw.sorteo);
   const session = await getSession();
   const tickets = session ? listTickets(session.uid).filter((ticket) => ticket.active === 1) : [];
 
   const bands = [
-    ["Tradicional", draw.tradicional, tradicional],
+    ["Tradicional", draw.tradicional, premios?.tradicional ?? null],
     ["La Segunda", draw.segunda, premios?.segunda ?? null],
     ["Revancha", draw.revancha, premios?.revancha ?? null],
   ] as const;
@@ -58,14 +46,7 @@ export async function Resultado({
               {premio ? (premio.ganadores === 0 ? " · vacante" : ` · ${premio.ganadores} ganadores`) : ""}
             </h2>
             <StaticNumbers numbers={numbers} />
-            {label === "Tradicional" && premio && premio.ganadores === 0 && tesoroTradicional && !tesoroTradicional.apagado ? (
-              <PozoTesoro monto={premio.monto} items={tesoroTradicional.items} />
-            ) : premio ? (
-              <p className="pozo">{formatPesos(premio.monto)}</p>
-            ) : null}
-            {label === "Tradicional" && tesoroTradicional?.apagado ? (
-              <p className="note">{tesoroTradicional.frase}</p>
-            ) : null}
+            {premio ? <p className="pozo">{formatPesos(premio.monto)}</p> : null}
           </section>
         ))}
         <section className="band">
@@ -91,9 +72,6 @@ export async function Resultado({
             return <p className={result.celebrar ? "note spark" : "note"} key={ticket.id}>{nombre}: {result.linea}</p>;
           })}
         </section>
-      ) : null}
-      {tradicional && tradicional.ganadores === 0 ? (
-        <Cambiar monto={tradicional.monto} frase={cambiarFrase} action={`/resultado/${draw.sorteo}`} />
       ) : null}
       <section className="band">
         <h2>Crónica</h2>

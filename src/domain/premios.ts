@@ -46,3 +46,7 @@ export function pesosArgentinos(raw: string): number | null {
   if (!Number.isFinite(value) || value <= 0) return null;
   return Math.round(value);
 }
+
+export function formatPesos(monto: number): string {
+  return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(monto);
+}
