@@ -1,8 +1,8 @@
 import { Numbers } from "@/components/numbers";
 import { loadBoard } from "@/src/data/draws";
 
-export default function MesaPage() {
-  const { upcoming, house } = loadBoard();
+export default async function MesaPage() {
+  const { upcoming, house } = await loadBoard();
 
   return (
     <main className="page">

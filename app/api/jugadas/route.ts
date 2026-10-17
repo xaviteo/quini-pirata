@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   const parsed = parseSix([0, 1, 2, 3, 4, 5].map((index) => String(form.get(`n${index}`) ?? "")));
   if ("error" in parsed) return redirectTo(req, "/jugadas", { error: parsed.error });
   const kind = form.get("kind") === "standing" ? "standing" : "once";
-  const { upcoming } = loadBoard();
+  const { upcoming } = await loadBoard();
   insertTicket(session.uid, formatSix(parsed.numbers), kind, upcoming.sorteo);
   return redirectTo(req, "/jugadas");
 }

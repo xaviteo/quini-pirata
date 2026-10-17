@@ -10,7 +10,7 @@ export default async function JugadasPage({ searchParams }: { searchParams: Prom
   const session = await getSession();
   if (!session) redirect("/login?next=/jugadas");
   const params = await searchParams;
-  const board = loadBoard();
+  const board = await loadBoard();
   const tickets = listTickets(session.uid);
 
   return (

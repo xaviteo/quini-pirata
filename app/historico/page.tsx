@@ -4,7 +4,7 @@ import { pad } from "@/src/domain/house";
 
 export default async function HistoricoPage({ searchParams }: { searchParams: Promise<{ anio?: string }> }) {
   const params = await searchParams;
-  const { draws } = loadBoard();
+  const { draws } = await loadBoard();
   const years = [...new Set(draws.map((draw) => draw.fecha.slice(0, 4)))].reverse();
   const anio = params.anio && years.includes(params.anio) ? params.anio : years[0];
   const shown = draws.filter((draw) => draw.fecha.startsWith(anio)).reverse();

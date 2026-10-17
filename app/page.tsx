@@ -2,8 +2,8 @@ import { Numbers } from "@/components/numbers";
 import { loadBoard } from "@/src/data/draws";
 import { pad } from "@/src/domain/house";
 
-export default function HomePage() {
-  const { upcoming, house } = loadBoard();
+export default async function HomePage() {
+  const { upcoming, house } = await loadBoard();
   const weekday = upcoming.fechaLarga.split(",")[0] ?? upcoming.fechaLarga;
   const rest = upcoming.fechaLarga.split(",").slice(1).join(",").trim();
 

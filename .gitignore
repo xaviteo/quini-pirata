@@ -5,6 +5,6 @@ node_modules
 *.log
 tsconfig.tsbuildinfo
 public/gap.csv
-data/
+/data/
 quini6_historico.json
 quini6_historico_long.csv

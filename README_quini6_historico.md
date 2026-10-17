@@ -16,10 +16,10 @@ Los 6 números de cada modalidad van ordenados de menor a mayor, no en orden de 
 
 ## Cobertura
 
-- 1934 sorteos únicos
-- 7736 filas por modalidad
-- Las 4 modalidades completas en los 1934 sorteos
-- Sorteo 1279 (2006-01-04) al sorteo 3412 (2026-09-27)
+- 1939 sorteos únicos
+- 7756 filas por modalidad
+- Las 4 modalidades completas en los 1939 sorteos
+- Sorteo 1279 (2006-01-04) al sorteo 3417 (2026-10-14)
 
 Por año:
 
@@ -27,7 +27,7 @@ Por año:
 - 2018: parcial (hasta ~sorteo 2569)
 - 2019: no está
 - 2020: parcial (desde ~sorteo 2756)
-- 2021–2026: casi completo hasta el 27/09/2026
+- 2021–2026: casi completo hasta el 14/10/2026
 
 Hueco grande: sorteos 2570–2755 (186 concursos, aprox. mediados 2018 a 2020). El blog fuente no tiene esas entradas.
 

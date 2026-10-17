@@ -21,16 +21,17 @@ function draw(parcial: Partial<Draw> & Pick<Draw, "sorteo" | "fecha">): Draw {
 }
 
 describe("histórico", () => {
-  it("llega al 3412 y conserva el hueco 2570-2755", () => {
+  it("llega al 3417 y conserva el hueco 2570-2755", () => {
     expect(draws[0].sorteo).toBe(1279);
-    expect(draws.at(-1)?.sorteo).toBe(3412);
-    expect(draws.at(-1)?.fecha).toBe("2026-09-27");
+    expect(draws.at(-1)?.sorteo).toBe(3417);
+    expect(draws.at(-1)?.fecha).toBe("2026-10-14");
+    expect(draws.at(-1)?.tradicional).toEqual([1, 9, 23, 24, 32, 37]);
     const gap = missingRanges(draws).find((range) => range.from <= 2570 && range.to >= 2755);
     expect(gap).toBeTruthy();
   });
 
-  it("el próximo sorteo después del domingo 27 es el miércoles 30", () => {
-    expect(nextSorteo(draws.at(-1)!)).toEqual({ sorteo: 3413, fecha: "2026-09-30" });
+  it("el próximo sorteo después del miércoles 14 es el domingo 18", () => {
+    expect(nextSorteo(draws.at(-1)!)).toEqual({ sorteo: 3418, fecha: "2026-10-18" });
   });
 });
 
@@ -70,7 +71,7 @@ describe("premios", () => {
 });
 
 describe("boleta de la casa", () => {
-  const history = draws.slice(0, -1);
+  const history = draws.filter((item) => item.sorteo < 3413);
   const upcoming = 3413;
 
   it("es reproducible y entra en la franja", () => {

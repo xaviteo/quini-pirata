@@ -3,10 +3,10 @@ import { pad } from "@/src/domain/house";
 
 export const dynamic = "force-dynamic";
 
-export default function LaboratorioPage() {
-  const board = loadBoard();
-  const rows = loadBacktest();
-  const stats = loadNumberStats();
+export default async function LaboratorioPage() {
+  const board = await loadBoard();
+  const rows = loadBacktest(board.draws);
+  const stats = loadNumberStats(board.draws);
   const expected = (6 * 6) / 46;
 
   return (

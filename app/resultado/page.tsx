@@ -3,8 +3,8 @@ import { loadBoard } from "@/src/data/draws";
 import { formatFecha } from "@/src/domain/house";
 import { pozoExtra } from "@/src/domain/prizes";
 
-export default function ResultadoPage() {
-  const { last } = loadBoard();
+export default async function ResultadoPage() {
+  const { last } = await loadBoard();
   const extra = pozoExtra(last);
   const bands = [
     ["Tradicional", last.tradicional],

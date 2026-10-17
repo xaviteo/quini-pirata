@@ -22,6 +22,8 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+export const dynamic = "force-dynamic";
+
 const themeBoot = `(function(){try{var t=localStorage.getItem('quini-theme');if(t!=='day'&&t!=='night'){var h=new Date().getHours();t=(h>=20||h<7)?'night':'day'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
