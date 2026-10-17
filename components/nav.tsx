@@ -3,17 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { MoonIcon, Seal, SunIcon } from "@/components/icons";
+import { MoonIcon, Seal, SunIcon, UserIcon } from "@/components/icons";
 
 const LINKS = [
-  ["/", "Portada"],
-  ["/mesa", "Mesa"],
+  ["/", "Hoy"],
   ["/resultado", "Resultado"],
-  ["/historico", "Histórico"],
-  ["/laboratorio", "Laboratorio"],
-  ["/jugadas", "Jugadas"],
-  ["/cuenta", "Cuenta"],
+  ["/historico", "Archivo"],
+  ["/laboratorio", "Lab"],
+  ["/jugadas", "Mis boletas"],
 ] as const;
+
+function isActive(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function Nav() {
   const pathname = usePathname();
@@ -51,6 +54,8 @@ export function Nav() {
     setTheme(next);
   }
 
+  const cuenta = pathname.startsWith("/cuenta") || pathname.startsWith("/login");
+
   return (
     <header className="nav">
       <Link className="brand" href="/">
@@ -58,6 +63,9 @@ export function Nav() {
         <span>quini.pirata.app</span>
       </Link>
       <div className="nav-end">
+        <Link className="cuenta-link" href="/cuenta" aria-label="Cuenta" data-active={cuenta}>
+          <UserIcon />
+        </Link>
         <button className="theme-btn" type="button" onClick={toggleTheme}>
           {theme === "night" ? <SunIcon /> : <MoonIcon />}
           <span>{theme === "night" ? "Día" : "Noche"}</span>
@@ -78,7 +86,7 @@ export function Nav() {
           Cerrar
         </button>
         {LINKS.map(([href, label]) => (
-          <Link key={href} href={href} data-active={pathname === href}>
+          <Link key={href} href={href} data-active={isActive(pathname, href)}>
             {label}
           </Link>
         ))}

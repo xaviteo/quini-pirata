@@ -20,6 +20,7 @@ export type TicketRow = {
   kind: "once" | "standing";
   starts_sorteo: number;
   active: number;
+  alias: string | null;
 };
 
 const SCHEMA = `
@@ -61,6 +62,10 @@ export function getDb(): DatabaseSync {
     database = new DatabaseSync(path.join(dir, "quini.db"));
     database.exec("PRAGMA foreign_keys = ON");
     database.exec(SCHEMA);
+    const columns = database.prepare("PRAGMA table_info(tickets)").all() as { name: string }[];
+    if (!columns.some((column) => column.name === "alias")) {
+      database.exec("ALTER TABLE tickets ADD COLUMN alias TEXT");
+    }
   }
   return database;
 }
@@ -87,6 +92,16 @@ async function seedAdmin(): Promise<void> {
   );
 }
 
+export async function createMember(email: string, password: string, name: string): Promise<string | null> {
+  const clean = email.trim().toLowerCase();
+  if (findUserByEmail(clean)) return "Ese mail ya tiene cuenta.";
+  const passwordHash = await hashPassword(password);
+  getDb()
+    .prepare("INSERT INTO users (email, name, password_hash, role) VALUES (?, ?, ?, 'member')")
+    .run(clean, name.trim() || "Jugador", passwordHash);
+  return null;
+}
+
 export function findUserByEmail(email: string): UserRow | undefined {
   return getDb().prepare("SELECT id, email, name, password_hash, phone, role FROM users WHERE email = ?").get(email) as
     | UserRow
@@ -102,15 +117,21 @@ export function findUserById(id: number): UserRow | undefined {
 export function listTickets(userId: number): TicketRow[] {
   return getDb()
     .prepare(
-      "SELECT id, user_id, numbers, kind, starts_sorteo, active FROM tickets WHERE user_id = ? ORDER BY id DESC",
+      "SELECT id, user_id, numbers, kind, starts_sorteo, active, alias FROM tickets WHERE user_id = ? ORDER BY id DESC",
     )
     .all(userId) as TicketRow[];
 }
 
-export function insertTicket(userId: number, numbers: string, kind: "once" | "standing", startsSorteo: number): void {
+export function insertTicket(
+  userId: number,
+  numbers: string,
+  kind: "once" | "standing",
+  startsSorteo: number,
+  alias: string | null,
+): void {
   getDb()
-    .prepare("INSERT INTO tickets (user_id, numbers, kind, starts_sorteo) VALUES (?, ?, ?, ?)")
-    .run(userId, numbers, kind, startsSorteo);
+    .prepare("INSERT INTO tickets (user_id, numbers, kind, starts_sorteo, alias) VALUES (?, ?, ?, ?, ?)")
+    .run(userId, numbers, kind, startsSorteo, alias);
 }
 
 export function deactivateTicket(userId: number, ticketId: number): void {

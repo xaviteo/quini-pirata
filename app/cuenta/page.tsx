@@ -18,7 +18,6 @@ export default async function CuentaPage({ searchParams }: { searchParams: Promi
       <p className="kicker">{user.role === "admin" ? "Admin" : "Miembro"}</p>
       <h1>{user.name}</h1>
       <p className="note">{user.email}{user.phone ? ` · ${user.phone}` : ""}</p>
-      <p className="note">El aviso por mail sale cuando esté el SMTP. WhatsApp espera la plantilla de Meta.</p>
       {params.error ? <p className="note">{params.error}</p> : null}
       {inviteLink ? <p className="note">Invitación nueva: {inviteLink}</p> : null}
       {user.role === "admin" ? (

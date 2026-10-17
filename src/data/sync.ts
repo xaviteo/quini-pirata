@@ -1,6 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { dedupeDraws, parseBloggerHtml, sameDraw } from "@/src/domain/feed";
+import { parseBloggerPremios, type Premios } from "@/src/domain/premios";
+import { writePremios } from "@/src/data/premios";
 import { nextSorteo, pad } from "@/src/domain/house";
 import { parseCsv } from "@/src/domain/parse";
 import type { Draw } from "@/src/domain/types";
@@ -74,30 +76,35 @@ async function fetchPage(url: string): Promise<FeedPayload> {
   return (await response.json()) as FeedPayload;
 }
 
-async function pullNewer(knownMax: number): Promise<Draw[]> {
+async function pullNewer(knownMax: number): Promise<{ draws: Draw[]; premios: Premios[] }> {
   const found: Draw[] = [];
+  const premios: Premios[] = [];
   let url: string | null = FEED;
   for (let page = 0; page < 8 && url; page++) {
     const payload = await fetchPage(url);
     const entries = payload.feed?.entry ?? [];
-    const parsed = entries
-      .map((entry) => parseBloggerHtml(entry.content?.$t ?? ""))
-      .filter((draw): draw is Draw => draw !== null);
     let sawKnown = false;
-    for (const draw of parsed) {
+    for (const entry of entries) {
+      const html = entry.content?.$t ?? "";
+      const draw = parseBloggerHtml(html);
+      if (!draw) continue;
+      const premio = parseBloggerPremios(html, draw.sorteo);
+      if (premio) premios.push(premio);
       if (draw.sorteo <= knownMax) sawKnown = true;
       else found.push(draw);
     }
     if (sawKnown || entries.length === 0) break;
     url = payload.feed?.link?.find((link) => link.rel === "next")?.href ?? null;
   }
-  return dedupeDraws(found);
+  return { draws: dedupeDraws(found), premios };
 }
 
 async function pull(known: Draw[]): Promise<void> {
   const last = known.at(-1);
   if (!last) return;
-  const newer = await pullNewer(last.sorteo);
+  const pulled = await pullNewer(last.sorteo);
+  if (pulled.premios.length > 0) writePremios(pulled.premios);
+  const newer = pulled.draws;
   if (newer.length === 0) return;
   let current: Draw[] = [];
   try {

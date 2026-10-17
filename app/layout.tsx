@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Seal } from "@/components/icons";
 import { Nav } from "@/components/nav";
 import "./globals.css";
 
@@ -12,7 +13,7 @@ const grotesk = localFont({
 
 export const metadata: Metadata = {
   title: "quini.pirata.app",
-  description: "Mesa privada del Quini 6. Boleta, histórico y aviso de premios.",
+  description: "Extracto, boleta y archivo del Quini 6.",
   robots: { index: false, follow: false },
 };
 
@@ -35,6 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Nav />
         {children}
+        <footer className="site-foot">
+          <Seal />
+          <p>No le prometemos el Quini. Le prometemos el extracto, la boleta y el archivo.</p>
+        </footer>
       </body>
     </html>
   );
